@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package com.example.view;
+
+import "akkaserverless/annotations.proto";
+import "com/example/domain/customer_domain.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+
+service AllCustomers {
+  option (akkaserverless.service) = {
+    type: SERVICE_TYPE_VIEW
+  };
+
+  rpc ProcessCustomerCreated(domain.CustomerCreated) returns (com.example.domain.CustomerState) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "customers"
+      transform_updates: true
+    };
+  }
+  rpc ProcessCustomerImported(domain.CustomerImported) returns (com.example.domain.CustomerState) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "customers"
+      transform_updates: true
+    };
+  }
+
+  rpc ProcessCustomerRenamed(domain.CustomerRenamed) returns (com.example.domain.CustomerState) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "customers"
+      transform_updates: true
+    };
+  }
+  rpc ProcessCustomerHeadCountryChanged(domain.CustomerHeadCountryChanged) returns (com.example.domain.CustomerState) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "customers"
+      transform_updates: true
+    };
+  }
+
+  rpc ProcessCustomerDeleted(domain.CustomerDeleted) returns (com.example.domain.CustomerState) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "customers"
+      transform_updates: true
+    };
+  }
+
+  rpc GetAllCustomers(google.protobuf.Empty) returns (CustomersResponse) {
+    option (akkaserverless.method).view.query = {
+      query: "SELECT * AS customers FROM customers"
+    };
+  }
+}
+
+message CustomersResponse {
+  repeated com.example.domain.CustomerState customers = 1;
+}
+

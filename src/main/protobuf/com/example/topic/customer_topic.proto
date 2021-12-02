@@ -1,0 +1,47 @@
+syntax = "proto3";
+package com.example.actions;
+
+import "akkaserverless/annotations.proto";
+import "com/example/domain/customer_domain.proto";
+
+
+service CustomerJournalToTopic {
+  option (akkaserverless.service) = {
+    type : SERVICE_TYPE_ACTION
+  };
+
+  rpc CreateCustomer (domain.CustomerCreated) returns (domain.CustomerCreated) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).eventing.out = {
+      topic:  "CustomerRepTopic"
+    };
+  }
+  rpc RenameCustomer (domain.CustomerRenamed) returns (domain.CustomerRenamed) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).eventing.out = {
+      topic:  "CustomerRepTopic"
+    };
+  }
+  rpc ImportCustomer (domain.CustomerImported) returns (domain.CustomerImported) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).eventing.out = {
+      topic:  "CustomerRepTopic"
+    };
+  }
+  rpc ChangeCustomerHeadCountry (domain.CustomerHeadCountryChanged) returns (domain.CustomerHeadCountryChanged) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).eventing.out = {
+      topic:  "CustomerRepTopic"
+    };
+  }
+
+
+}

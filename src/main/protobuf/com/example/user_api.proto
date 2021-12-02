@@ -1,0 +1,58 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "akkaserverless/annotations.proto";
+import "google/api/annotations.proto";
+
+package com.example;
+
+
+
+message AddAdminUser {
+  string userID = 1 [(akkaserverless.field).entity_key = true];
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+}
+
+
+message AddNewUser {
+  string userID = 1 [(akkaserverless.field).entity_key = true];
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  bool isAdmin = 5;
+  string byUserID = 6;
+}
+
+message CurrentUser {
+  string userID = 1 ;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  bool isAdmin = 5;
+}
+
+message UserID {
+  string userID = 1 [(akkaserverless.field).entity_key = true];
+}
+
+message SetIsAdmin {
+  string userID = 1 [(akkaserverless.field).entity_key = true];
+  bool isAdmin = 2;
+  string byUserID = 3;
+}
+
+service UserService {
+  option (akkaserverless.service) = {
+    type : SERVICE_TYPE_ENTITY
+    component : "com.example.domain.User"
+  };
+
+  rpc CreateAdminUser(AddAdminUser) returns (google.protobuf.Empty);
+  rpc CreateUser(AddNewUser) returns (google.protobuf.Empty);
+ // rpc ImportUser(AddNewUser) returns (google.protobuf.Empty);
+  rpc GetUser(UserID) returns (CurrentUser);
+  rpc UpdateIsAdmin(SetIsAdmin) returns (google.protobuf.Empty);
+}

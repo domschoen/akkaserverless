@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package com.example.domain;
+
+import "akkaserverless/annotations.proto";
+
+option (akkaserverless.file).event_sourced_entity = {
+    name: "Customer"
+    entity_type: "customer"
+    state: "CustomerState"
+    events: ["CustomerCreated", "CustomerImported", "CustomerRenamed","CustomerHeadCountryChanged", "CustomerDeleted"]
+};
+
+
+message CustomerState {
+    string trigram = 1;
+    int32 customerID = 2;
+    string name = 3;
+    string customerType = 4;
+    string dynamicsAccountID = 5;
+    string headCountry = 6;
+    string region = 7;
+}
+
+message CustomerCreated {
+    CustomerState customer = 1;
+    int64 date = 2;
+    string byUserID = 3;
+}
+
+message CustomerImported {
+    CustomerState customer = 1;
+    int64 date = 2;
+    string byUserID = 3;
+}
+
+message CustomerRenamed {
+    string newName = 1;
+    int64 date = 2;
+    string byUserID = 3;
+}
+
+message CustomerHeadCountryChanged {
+    string newHeadCountry = 1;
+    int64 date = 2;
+    string byUserID = 3;
+}
+message CustomerDeleted {
+    int64 date = 1;
+    string byUserID = 2;
+}
+
+message CustomerEvent {
+    string action = 1;
+    string content = 2;
+}
+
+message CustomerResponse {
+    string trigram = 1;
+    int32 customerID = 2;
+    string name = 3;
+    string customerType = 4;
+    string dynamicsAccountID = 5;
+    string headCountry = 6;
+    string region = 7;
+    bool isDeleted = 8;
+    repeated CustomerEvent events = 9;
+}
+
+
+

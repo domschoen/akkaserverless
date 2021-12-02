@@ -1,0 +1,63 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "akkaserverless/annotations.proto";
+import "google/api/annotations.proto";
+
+package com.example;
+
+message AddNewCustomer {
+    string trigram = 1 [(akkaserverless.field).entity_key = true];
+    string userID = 2;
+    int32 customerID = 3;
+    string name = 4;
+    string customerType = 5;
+    string dynamicsAccountID = 6;
+    string headCountry = 7;
+    string region = 8;
+}
+
+message CustomerNewName {
+    string trigram = 1 [(akkaserverless.field).entity_key = true];
+    string name = 2;
+    string userID = 3;
+}
+message CustomerNewCountry {
+    string trigram = 1 [(akkaserverless.field).entity_key = true];
+    string headCountry = 2;
+    string userID = 3;
+}
+message CustomerTrigram {
+    string trigram = 1 [(akkaserverless.field).entity_key = true];
+}
+
+message DeleteExistingCustomer {
+    string trigram = 1 [(akkaserverless.field).entity_key = true];
+    string userID = 2;
+}
+
+message Customer {
+    string trigram = 1;
+    int32 customerID = 2;
+    string name = 3;
+    string customerType = 4;
+    string dynamicsAccountID = 5;
+    string headCountry = 6;
+    string region = 7;
+}
+
+
+service CustomerService {
+    option (akkaserverless.service) = {
+        type : SERVICE_TYPE_ENTITY
+        component : "com.example.domain.Customer"
+    };
+
+    rpc CreateCustomer(AddNewCustomer) returns (google.protobuf.Empty);
+    rpc ImportCustomer(AddNewCustomer) returns (google.protobuf.Empty);
+    rpc RenameCustomer(CustomerNewName) returns (google.protobuf.Empty);
+    rpc ChangeCustomerCountry(CustomerNewCountry) returns (google.protobuf.Empty);
+    rpc GetCustomer(CustomerTrigram) returns (Customer);
+    rpc DeleteCustomer(DeleteExistingCustomer) returns (google.protobuf.Empty);
+}

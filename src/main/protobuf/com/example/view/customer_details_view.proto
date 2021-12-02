@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package com.example.view;
+
+import "akkaserverless/annotations.proto";
+import "com/example/domain/customer_domain.proto";
+import "google/api/annotations.proto";
+
+// Detail
+service CustomerDetailsByTrigram {
+  option (akkaserverless.service) = {
+    type: SERVICE_TYPE_VIEW
+  };
+
+  rpc ProcessCustomerCreated(domain.CustomerCreated) returns (domain.CustomerResponse) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "detailedcustomers"
+      transform_updates: true
+    };
+  }
+  rpc ProcessCustomerImported(domain.CustomerImported) returns (domain.CustomerResponse) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "detailedcustomers"
+      transform_updates: true
+    };
+  }
+
+  rpc ProcessCustomerRenamed(domain.CustomerRenamed) returns (domain.CustomerResponse) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "detailedcustomers"
+      transform_updates: true
+    };
+  }
+  rpc ProcessCustomerHeadCountryChanged(domain.CustomerHeadCountryChanged) returns (domain.CustomerResponse) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "detailedcustomers"
+      transform_updates: true
+    };
+  }
+
+  rpc ProcessCustomerDeleted(domain.CustomerDeleted) returns (domain.CustomerResponse) {
+    option (akkaserverless.method).eventing.in = {
+      event_sourced_entity: "customer"
+    };
+    option (akkaserverless.method).view.update = {
+      table: "detailedcustomers"
+      transform_updates: true
+    };
+  }
+
+
+  rpc GetCustomer(ByTrigramRequest) returns (domain.CustomerResponse) {
+    option (akkaserverless.method).view.query = {
+      query: "SELECT * FROM detailedcustomers where trigram = :trigram"
+    };
+  }
+}
+message ByTrigramRequest {
+  string trigram = 1;
+}
+
+
+

@@ -1,0 +1,35 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "akkaserverless/annotations.proto";
+import "google/api/annotations.proto";
+
+package com.example;
+
+message AddNewCountry {
+    string isoCode = 1 [(akkaserverless.field).entity_key = true];
+    string name = 2;
+    string userID = 3;
+}
+
+message CountryIsoCode {
+    string isoCode = 1 [(akkaserverless.field).entity_key = true];
+}
+
+message Country {
+    string isoCode = 1;
+    string name = 3;
+}
+
+
+service CountryService {
+    option (akkaserverless.service) = {
+        type : SERVICE_TYPE_ENTITY
+        component : "com.example.domain.Country"
+    };
+
+    rpc CreateCountry(AddNewCountry) returns (google.protobuf.Empty);
+    rpc ImportCountry(AddNewCountry) returns (google.protobuf.Empty);
+    rpc GetCountry(CountryIsoCode) returns (Country);
+}

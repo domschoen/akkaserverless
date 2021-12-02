@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package com.example.domain;
+
+import "akkaserverless/annotations.proto";
+
+option (akkaserverless.file).event_sourced_entity = {
+  name: "User"
+  entity_type: "user"
+  state: "UserState"
+  events: ["UserCreated", "UserImported", "IsAdminUpdated"]
+};
+
+message UserState {
+  string userID = 1 ;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  bool isAdmin = 5;
+}
+
+message UserCreated {
+  UserState user = 1;
+  int64 date = 2;
+  string byUserID = 3;
+}
+
+message UserImported {
+  UserState user = 1;
+  int64 date = 2;
+  string byUserID = 3;
+}
+
+message IsAdminUpdated {
+  bool isAdmin = 1;
+  int64 date = 2;
+  string byUserID = 3;
+}
+
+message UserEvent {
+  string action = 1;
+  string content = 2;
+}
+
+message UserResponse {
+  string userID = 1 ;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  bool isAdmin = 5;
+  repeated UserEvent events = 6;
+}
